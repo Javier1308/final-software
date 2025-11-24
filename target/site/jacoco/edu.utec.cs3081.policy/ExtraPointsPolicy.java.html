@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExtraPointsPolicy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CS-GradeCalculator</a> &gt; <a href="index.source.html" class="el_package">edu.utec.cs3081.policy</a> &gt; <span class="el_source">ExtraPointsPolicy.java</span></div><h1>ExtraPointsPolicy.java</h1><pre class="source lang-java linenums">package edu.utec.cs3081.policy;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * Política de puntos extra aplicada según el año académico.
+ * Los docentes definen colectivamente en qué años se otorgan puntos extra.
+ */
+public class ExtraPointsPolicy {
+    
+    private static final double DEFAULT_EXTRA_POINTS = 2.0;
+    private static final double MAX_GRADE = 20.0;
+    
+    private final Set&lt;Integer&gt; yearsWithExtraPoints;
+    private final double extraPoints;
+
+    /**
+     * Constructor con años específicos y puntos extra por defecto.
+     * 
+     * @param allYearsTeachers lista de años donde se otorgan puntos extra
+     */
+    public ExtraPointsPolicy(List&lt;Integer&gt; allYearsTeachers) {
+<span class="fc" id="L26">        this(allYearsTeachers, DEFAULT_EXTRA_POINTS);</span>
+<span class="fc" id="L27">    }</span>
+
+    /**
+     * Constructor con años específicos y puntos extra personalizados.
+     * 
+     * @param allYearsTeachers lista de años donde se otorgan puntos extra
+     * @param extraPoints cantidad de puntos extra a otorgar
+     */
+<span class="fc" id="L35">    public ExtraPointsPolicy(List&lt;Integer&gt; allYearsTeachers, double extraPoints) {</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        this.yearsWithExtraPoints = allYearsTeachers != null </span>
+<span class="fc" id="L37">            ? new HashSet&lt;&gt;(allYearsTeachers) </span>
+<span class="fc" id="L38">            : new HashSet&lt;&gt;();</span>
+<span class="fc" id="L39">        this.extraPoints = Math.max(0, extraPoints);</span>
+<span class="fc" id="L40">    }</span>
+
+    /**
+     * Verifica si se otorgan puntos extra para un año académico dado.
+     * 
+     * @param academicYear el año académico a verificar
+     * @return true si se otorgan puntos extra para ese año
+     */
+    public boolean hasExtraPoints(int academicYear) {
+<span class="fc" id="L49">        return yearsWithExtraPoints.contains(academicYear);</span>
+    }
+
+    /**
+     * Aplica los puntos extra a la nota si corresponde al año académico.
+     * La nota máxima es 20.
+     * 
+     * @param grade la nota base
+     * @param academicYear el año académico del estudiante
+     * @return la nota con puntos extra aplicados (máximo 20)
+     */
+    public double applyExtraPoints(double grade, int academicYear) {
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (!hasExtraPoints(academicYear)) {</span>
+<span class="fc" id="L62">            return grade;</span>
+        }
+<span class="fc" id="L64">        return Math.min(grade + extraPoints, MAX_GRADE);</span>
+    }
+
+    /**
+     * Obtiene la cantidad de puntos extra otorgados para un año.
+     * 
+     * @param academicYear el año académico
+     * @return cantidad de puntos extra (0 si no aplica)
+     */
+    public double getExtraPointsForYear(int academicYear) {
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        return hasExtraPoints(academicYear) ? extraPoints : 0.0;</span>
+    }
+
+    /**
+     * Obtiene la descripción de la política aplicada.
+     * 
+     * @param academicYear el año académico
+     * @return descripción de la política
+     */
+    public String getPolicyDescription(int academicYear) {
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (hasExtraPoints(academicYear)) {</span>
+<span class="fc" id="L85">            return String.format(&quot;Puntos extra aplicados: +%.2f (año %d)&quot;, extraPoints, academicYear);</span>
+        }
+<span class="fc" id="L87">        return String.format(&quot;Sin puntos extra para el año %d&quot;, academicYear);</span>
+    }
+
+    /**
+     * Obtiene los años configurados con puntos extra.
+     * 
+     * @return conjunto inmutable de años con puntos extra
+     */
+    public Set&lt;Integer&gt; getYearsWithExtraPoints() {
+<span class="fc" id="L96">        return Collections.unmodifiableSet(yearsWithExtraPoints);</span>
+    }
+
+    /**
+     * Obtiene la cantidad de puntos extra configurada.
+     * 
+     * @return puntos extra
+     */
+    public double getExtraPoints() {
+<span class="fc" id="L105">        return extraPoints;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

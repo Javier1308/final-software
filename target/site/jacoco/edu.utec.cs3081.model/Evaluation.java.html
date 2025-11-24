@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Evaluation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CS-GradeCalculator</a> &gt; <a href="index.source.html" class="el_package">edu.utec.cs3081.model</a> &gt; <span class="el_source">Evaluation.java</span></div><h1>Evaluation.java</h1><pre class="source lang-java linenums">package edu.utec.cs3081.model;
+
+import edu.utec.cs3081.exception.InvalidEvaluationException;
+
+/**
+ * Representa una evaluación individual con su nota y peso.
+ */
+public class Evaluation {
+    
+    private static final double MIN_GRADE = 0.0;
+    private static final double MAX_GRADE = 20.0;
+    private static final double MIN_WEIGHT = 0.0;
+    private static final double MAX_WEIGHT = 1.0;
+    
+    private final String name;
+    private final double grade;
+    private final double weight;
+
+<span class="fc" id="L19">    public Evaluation(String name, double grade, double weight) {</span>
+<span class="fc" id="L20">        validateName(name);</span>
+<span class="fc" id="L21">        validateGrade(grade);</span>
+<span class="fc" id="L22">        validateWeight(weight);</span>
+        
+<span class="fc" id="L24">        this.name = name;</span>
+<span class="fc" id="L25">        this.grade = grade;</span>
+<span class="fc" id="L26">        this.weight = weight;</span>
+<span class="fc" id="L27">    }</span>
+
+    private void validateName(String name) {
+<span class="fc bfc" id="L30" title="All 4 branches covered.">        if (name == null || name.isBlank()) {</span>
+<span class="fc" id="L31">            throw new InvalidEvaluationException(&quot;El nombre de la evaluación no puede ser nulo o vacío&quot;);</span>
+        }
+<span class="fc" id="L33">    }</span>
+
+    private void validateGrade(double grade) {
+<span class="fc bfc" id="L36" title="All 4 branches covered.">        if (grade &lt; MIN_GRADE || grade &gt; MAX_GRADE) {</span>
+<span class="fc" id="L37">            throw new InvalidEvaluationException(</span>
+<span class="fc" id="L38">                String.format(&quot;La nota debe estar entre %.1f y %.1f. Valor recibido: %.2f&quot;, </span>
+<span class="fc" id="L39">                    MIN_GRADE, MAX_GRADE, grade));</span>
+        }
+<span class="fc" id="L41">    }</span>
+
+    private void validateWeight(double weight) {
+<span class="fc bfc" id="L44" title="All 4 branches covered.">        if (weight &lt;= MIN_WEIGHT || weight &gt; MAX_WEIGHT) {</span>
+<span class="fc" id="L45">            throw new InvalidEvaluationException(</span>
+<span class="fc" id="L46">                String.format(&quot;El peso debe estar entre %.1f (exclusivo) y %.1f. Valor recibido: %.2f&quot;, </span>
+<span class="fc" id="L47">                    MIN_WEIGHT, MAX_WEIGHT, weight));</span>
+        }
+<span class="fc" id="L49">    }</span>
+
+    public String getName() {
+<span class="fc" id="L52">        return name;</span>
+    }
+
+    public double getGrade() {
+<span class="fc" id="L56">        return grade;</span>
+    }
+
+    public double getWeight() {
+<span class="fc" id="L60">        return weight;</span>
+    }
+
+    public double getWeightedGrade() {
+<span class="fc" id="L64">        return grade * weight;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L69">        return String.format(&quot;%s: %.2f (peso: %.0f%%)&quot;, name, grade, weight * 100);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

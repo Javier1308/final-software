@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GradeCalculator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CS-GradeCalculator</a> &gt; <a href="index.source.html" class="el_package">edu.utec.cs3081.calculator</a> &gt; <span class="el_source">GradeCalculator.java</span></div><h1>GradeCalculator.java</h1><pre class="source lang-java linenums">package edu.utec.cs3081.calculator;
+
+import edu.utec.cs3081.exception.GradeCalculationException;
+import edu.utec.cs3081.model.Evaluation;
+import edu.utec.cs3081.model.Student;
+import edu.utec.cs3081.policy.AttendancePolicy;
+import edu.utec.cs3081.policy.ExtraPointsPolicy;
+
+import java.util.List;
+
+/**
+ * Calculadora de nota final para estudiantes de UTEC.
+ * Implementa RF04: cálculo de nota final considerando evaluaciones,
+ * asistencia mínima y políticas de puntos extra.
+ */
+public class GradeCalculator {
+    
+    private static final double WEIGHT_TOLERANCE = 0.001;
+    private static final double EXPECTED_TOTAL_WEIGHT = 1.0;
+    
+    private final AttendancePolicy attendancePolicy;
+    private final ExtraPointsPolicy extraPointsPolicy;
+
+    /**
+     * Constructor con políticas personalizadas.
+     * 
+     * @param attendancePolicy política de asistencia
+     * @param extraPointsPolicy política de puntos extra
+     */
+<span class="fc" id="L30">    public GradeCalculator(AttendancePolicy attendancePolicy, ExtraPointsPolicy extraPointsPolicy) {</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        this.attendancePolicy = attendancePolicy != null ? attendancePolicy : new AttendancePolicy();</span>
+<span class="fc" id="L32">        this.extraPointsPolicy = extraPointsPolicy;</span>
+<span class="fc" id="L33">    }</span>
+
+    /**
+     * Constructor solo con política de puntos extra.
+     * 
+     * @param extraPointsPolicy política de puntos extra
+     */
+    public GradeCalculator(ExtraPointsPolicy extraPointsPolicy) {
+<span class="nc" id="L41">        this(new AttendancePolicy(), extraPointsPolicy);</span>
+<span class="nc" id="L42">    }</span>
+
+    /**
+     * Constructor por defecto sin puntos extra.
+     */
+    public GradeCalculator() {
+<span class="fc" id="L48">        this(new AttendancePolicy(), null);</span>
+<span class="fc" id="L49">    }</span>
+
+    /**
+     * Calcula la nota final de un estudiante para un año académico.
+     * El cálculo es determinista: mismos datos producen misma nota (RNF03).
+     * 
+     * @param student el estudiante con sus evaluaciones
+     * @param academicYear el año académico para aplicar política de puntos extra
+     * @return GradeResult con la nota final y detalles del cálculo
+     * @throws GradeCalculationException si hay error en el cálculo
+     */
+    public GradeResult calculateFinalGrade(Student student, int academicYear) {
+<span class="fc" id="L61">        validateStudent(student);</span>
+<span class="fc" id="L62">        validateWeights(student.getEvaluations());</span>
+
+<span class="fc" id="L64">        double weightedAverage = calculateWeightedAverage(student.getEvaluations());</span>
+<span class="fc" id="L65">        boolean meetsAttendance = attendancePolicy.meetsMinimumAttendance(student);</span>
+<span class="fc" id="L66">        String attendanceDetail = attendancePolicy.getPolicyDescription(student);</span>
+
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (!meetsAttendance) {</span>
+<span class="fc" id="L69">            return buildResultForNoAttendance(student, weightedAverage, attendanceDetail, academicYear);</span>
+        }
+
+<span class="fc" id="L72">        double gradeWithExtra = applyExtraPoints(weightedAverage, academicYear);</span>
+<span class="fc" id="L73">        double extraPointsApplied = gradeWithExtra - weightedAverage;</span>
+<span class="fc" id="L74">        String extraPointsDetail = getExtraPointsDetail(academicYear);</span>
+
+<span class="fc" id="L76">        return new GradeResult.Builder()</span>
+<span class="fc" id="L77">            .studentCode(student.getCode())</span>
+<span class="fc" id="L78">            .evaluations(student.getEvaluations())</span>
+<span class="fc" id="L79">            .weightedAverage(weightedAverage)</span>
+<span class="fc" id="L80">            .meetsAttendance(true)</span>
+<span class="fc" id="L81">            .penalizedByAttendance(false)</span>
+<span class="fc" id="L82">            .attendanceDetail(attendanceDetail)</span>
+<span class="fc" id="L83">            .extraPointsApplied(extraPointsApplied)</span>
+<span class="fc" id="L84">            .extraPointsDetail(extraPointsDetail)</span>
+<span class="fc" id="L85">            .finalGrade(gradeWithExtra)</span>
+<span class="fc" id="L86">            .build();</span>
+    }
+
+    /**
+     * Calcula la nota final sin considerar año académico (sin puntos extra).
+     * 
+     * @param student el estudiante con sus evaluaciones
+     * @return GradeResult con la nota final y detalles
+     */
+    public GradeResult calculateFinalGrade(Student student) {
+<span class="nc" id="L96">        return calculateFinalGrade(student, 0);</span>
+    }
+
+    private void validateStudent(Student student) {
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (student == null) {</span>
+<span class="fc" id="L101">            throw new GradeCalculationException(&quot;El estudiante no puede ser nulo&quot;);</span>
+        }
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        if (student.getEvaluations().isEmpty()) {</span>
+<span class="fc" id="L104">            throw new GradeCalculationException(&quot;El estudiante debe tener al menos una evaluación&quot;);</span>
+        }
+<span class="fc" id="L106">    }</span>
+
+    private void validateWeights(List&lt;Evaluation&gt; evaluations) {
+<span class="fc" id="L109">        double totalWeight = evaluations.stream()</span>
+<span class="fc" id="L110">            .mapToDouble(Evaluation::getWeight)</span>
+<span class="fc" id="L111">            .sum();</span>
+        
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (Math.abs(totalWeight - EXPECTED_TOTAL_WEIGHT) &gt; WEIGHT_TOLERANCE) {</span>
+<span class="fc" id="L114">            throw new GradeCalculationException(</span>
+<span class="fc" id="L115">                String.format(&quot;La suma de pesos debe ser 1.0 (100%%). Suma actual: %.2f&quot;, totalWeight));</span>
+        }
+<span class="fc" id="L117">    }</span>
+
+    private double calculateWeightedAverage(List&lt;Evaluation&gt; evaluations) {
+<span class="fc" id="L120">        return evaluations.stream()</span>
+<span class="fc" id="L121">            .mapToDouble(Evaluation::getWeightedGrade)</span>
+<span class="fc" id="L122">            .sum();</span>
+    }
+
+    private double applyExtraPoints(double grade, int academicYear) {
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        if (extraPointsPolicy == null) {</span>
+<span class="fc" id="L127">            return grade;</span>
+        }
+<span class="fc" id="L129">        return extraPointsPolicy.applyExtraPoints(grade, academicYear);</span>
+    }
+
+    private String getExtraPointsDetail(int academicYear) {
+<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (extraPointsPolicy == null) {</span>
+<span class="fc" id="L134">            return &quot;No configurada política de puntos extra&quot;;</span>
+        }
+<span class="fc" id="L136">        return extraPointsPolicy.getPolicyDescription(academicYear);</span>
+    }
+
+    private GradeResult buildResultForNoAttendance(Student student, double weightedAverage, 
+                                                    String attendanceDetail, int academicYear) {
+<span class="fc" id="L141">        return new GradeResult.Builder()</span>
+<span class="fc" id="L142">            .studentCode(student.getCode())</span>
+<span class="fc" id="L143">            .evaluations(student.getEvaluations())</span>
+<span class="fc" id="L144">            .weightedAverage(weightedAverage)</span>
+<span class="fc" id="L145">            .meetsAttendance(false)</span>
+<span class="fc" id="L146">            .penalizedByAttendance(true)</span>
+<span class="fc" id="L147">            .attendanceDetail(attendanceDetail)</span>
+<span class="fc" id="L148">            .extraPointsApplied(0)</span>
+<span class="fc" id="L149">            .extraPointsDetail(&quot;No aplica (penalizado por asistencia)&quot;)</span>
+<span class="fc" id="L150">            .finalGrade(0.0)</span>
+<span class="fc" id="L151">            .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

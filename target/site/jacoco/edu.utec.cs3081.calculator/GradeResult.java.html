@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GradeResult.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CS-GradeCalculator</a> &gt; <a href="index.source.html" class="el_package">edu.utec.cs3081.calculator</a> &gt; <span class="el_source">GradeResult.java</span></div><h1>GradeResult.java</h1><pre class="source lang-java linenums">package edu.utec.cs3081.calculator;
+
+import edu.utec.cs3081.model.Evaluation;
+
+import java.util.List;
+
+/**
+ * Resultado del cálculo de nota final con todos los detalles.
+ * Cumple con RF05: mostrar detalle del cálculo.
+ */
+public class GradeResult {
+    
+    private final String studentCode;
+    private final double weightedAverage;
+    private final double extraPointsApplied;
+    private final double finalGrade;
+    private final boolean meetsAttendance;
+    private final boolean penalizedByAttendance;
+    private final List&lt;Evaluation&gt; evaluations;
+    private final String attendanceDetail;
+    private final String extraPointsDetail;
+
+<span class="fc" id="L23">    private GradeResult(Builder builder) {</span>
+<span class="fc" id="L24">        this.studentCode = builder.studentCode;</span>
+<span class="fc" id="L25">        this.weightedAverage = builder.weightedAverage;</span>
+<span class="fc" id="L26">        this.extraPointsApplied = builder.extraPointsApplied;</span>
+<span class="fc" id="L27">        this.finalGrade = builder.finalGrade;</span>
+<span class="fc" id="L28">        this.meetsAttendance = builder.meetsAttendance;</span>
+<span class="fc" id="L29">        this.penalizedByAttendance = builder.penalizedByAttendance;</span>
+<span class="fc" id="L30">        this.evaluations = builder.evaluations;</span>
+<span class="fc" id="L31">        this.attendanceDetail = builder.attendanceDetail;</span>
+<span class="fc" id="L32">        this.extraPointsDetail = builder.extraPointsDetail;</span>
+<span class="fc" id="L33">    }</span>
+
+    public String getStudentCode() {
+<span class="fc" id="L36">        return studentCode;</span>
+    }
+
+    public double getWeightedAverage() {
+<span class="fc" id="L40">        return weightedAverage;</span>
+    }
+
+    public double getExtraPointsApplied() {
+<span class="fc" id="L44">        return extraPointsApplied;</span>
+    }
+
+    public double getFinalGrade() {
+<span class="fc" id="L48">        return finalGrade;</span>
+    }
+
+    public boolean isMeetsAttendance() {
+<span class="fc" id="L52">        return meetsAttendance;</span>
+    }
+
+    public boolean isPenalizedByAttendance() {
+<span class="fc" id="L56">        return penalizedByAttendance;</span>
+    }
+
+    public List&lt;Evaluation&gt; getEvaluations() {
+<span class="fc" id="L60">        return evaluations;</span>
+    }
+
+    public String getAttendanceDetail() {
+<span class="fc" id="L64">        return attendanceDetail;</span>
+    }
+
+    public String getExtraPointsDetail() {
+<span class="fc" id="L68">        return extraPointsDetail;</span>
+    }
+
+    /**
+     * Genera el reporte detallado del cálculo.
+     * 
+     * @return String con el detalle completo del cálculo
+     */
+    public String getDetailedReport() {
+<span class="fc" id="L77">        StringBuilder report = new StringBuilder();</span>
+<span class="fc" id="L78">        report.append(&quot;═══════════════════════════════════════════\n&quot;);</span>
+<span class="fc" id="L79">        report.append(&quot;       DETALLE DE CÁLCULO DE NOTA FINAL    \n&quot;);</span>
+<span class="fc" id="L80">        report.append(&quot;═══════════════════════════════════════════\n&quot;);</span>
+<span class="fc" id="L81">        report.append(String.format(&quot;Estudiante: %s%n&quot;, studentCode));</span>
+<span class="fc" id="L82">        report.append(&quot;───────────────────────────────────────────\n&quot;);</span>
+        
+<span class="fc" id="L84">        report.append(&quot;EVALUACIONES:\n&quot;);</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        for (Evaluation eval : evaluations) {</span>
+<span class="fc" id="L86">            report.append(String.format(&quot;  • %s: %.2f × %.0f%% = %.2f%n&quot;, </span>
+<span class="fc" id="L87">                eval.getName(), eval.getGrade(), eval.getWeight() * 100, eval.getWeightedGrade()));</span>
+<span class="fc" id="L88">        }</span>
+        
+<span class="fc" id="L90">        report.append(&quot;───────────────────────────────────────────\n&quot;);</span>
+<span class="fc" id="L91">        report.append(String.format(&quot;Promedio ponderado: %.2f%n&quot;, weightedAverage));</span>
+<span class="fc" id="L92">        report.append(String.format(&quot;Asistencia: %s%n&quot;, attendanceDetail));</span>
+<span class="fc" id="L93">        report.append(String.format(&quot;Puntos extra: %s%n&quot;, extraPointsDetail));</span>
+        
+<span class="fc" id="L95">        report.append(&quot;═══════════════════════════════════════════\n&quot;);</span>
+<span class="fc" id="L96">        report.append(String.format(&quot;NOTA FINAL: %.2f%n&quot;, finalGrade));</span>
+<span class="fc" id="L97">        report.append(&quot;═══════════════════════════════════════════\n&quot;);</span>
+        
+<span class="fc" id="L99">        return report.toString();</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L104">        return String.format(&quot;GradeResult[student=%s, final=%.2f]&quot;, studentCode, finalGrade);</span>
+    }
+
+    /**
+     * Builder para construir GradeResult de forma fluida.
+     */
+<span class="fc" id="L110">    public static class Builder {</span>
+        private String studentCode;
+        private double weightedAverage;
+        private double extraPointsApplied;
+        private double finalGrade;
+        private boolean meetsAttendance;
+        private boolean penalizedByAttendance;
+        private List&lt;Evaluation&gt; evaluations;
+        private String attendanceDetail;
+        private String extraPointsDetail;
+
+        public Builder studentCode(String studentCode) {
+<span class="fc" id="L122">            this.studentCode = studentCode;</span>
+<span class="fc" id="L123">            return this;</span>
+        }
+
+        public Builder weightedAverage(double weightedAverage) {
+<span class="fc" id="L127">            this.weightedAverage = weightedAverage;</span>
+<span class="fc" id="L128">            return this;</span>
+        }
+
+        public Builder extraPointsApplied(double extraPointsApplied) {
+<span class="fc" id="L132">            this.extraPointsApplied = extraPointsApplied;</span>
+<span class="fc" id="L133">            return this;</span>
+        }
+
+        public Builder finalGrade(double finalGrade) {
+<span class="fc" id="L137">            this.finalGrade = finalGrade;</span>
+<span class="fc" id="L138">            return this;</span>
+        }
+
+        public Builder meetsAttendance(boolean meetsAttendance) {
+<span class="fc" id="L142">            this.meetsAttendance = meetsAttendance;</span>
+<span class="fc" id="L143">            return this;</span>
+        }
+
+        public Builder penalizedByAttendance(boolean penalizedByAttendance) {
+<span class="fc" id="L147">            this.penalizedByAttendance = penalizedByAttendance;</span>
+<span class="fc" id="L148">            return this;</span>
+        }
+
+        public Builder evaluations(List&lt;Evaluation&gt; evaluations) {
+<span class="fc" id="L152">            this.evaluations = evaluations;</span>
+<span class="fc" id="L153">            return this;</span>
+        }
+
+        public Builder attendanceDetail(String attendanceDetail) {
+<span class="fc" id="L157">            this.attendanceDetail = attendanceDetail;</span>
+<span class="fc" id="L158">            return this;</span>
+        }
+
+        public Builder extraPointsDetail(String extraPointsDetail) {
+<span class="fc" id="L162">            this.extraPointsDetail = extraPointsDetail;</span>
+<span class="fc" id="L163">            return this;</span>
+        }
+
+        public GradeResult build() {
+<span class="fc" id="L167">            return new GradeResult(this);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
