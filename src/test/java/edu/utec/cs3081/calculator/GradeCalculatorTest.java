@@ -60,13 +60,13 @@ class GradeCalculatorTest {
         @Test
         @DisplayName("shouldReturnDeterministicResultWhenSameInputs")
         void shouldReturnDeterministicResultWhenSameInputs() {
-            Student student1 = createStudentWithEvaluations("STU003", true, 
-                new Evaluation("E1", 12.0, 0.5), 
-                new Evaluation("E2", 14.0, 0.5));
-            
-            Student student2 = createStudentWithEvaluations("STU003", true, 
-                new Evaluation("E1", 12.0, 0.5), 
-                new Evaluation("E2", 14.0, 0.5));
+            Student student1 = createStudentWithEvaluations(
+                    new Evaluation("E1", 12.0, 0.5),
+                    new Evaluation("E2", 14.0, 0.5));
+
+            Student student2 = createStudentWithEvaluations(
+                    new Evaluation("E1", 12.0, 0.5),
+                    new Evaluation("E2", 14.0, 0.5));
 
             GradeResult result1 = calculator.calculateFinalGrade(student1, 2024);
             GradeResult result2 = calculator.calculateFinalGrade(student2, 2024);
@@ -87,6 +87,18 @@ class GradeCalculatorTest {
 
             double expected = (15.0 * 0.2) + (16.0 * 0.2) + (14.0 * 0.3) + (18.0 * 0.3);
             assertEquals(expected, result.getWeightedAverage(), 0.001);
+        }
+
+        @Test
+        @DisplayName("shouldCalculateFinalGradeWithoutAcademicYear")
+        void shouldCalculateFinalGradeWithoutAcademicYear() {
+            Student student = new Student("STU020", true);
+            student.addEvaluation(new Evaluation("Parcial", 16.0, 0.5));
+            student.addEvaluation(new Evaluation("Final", 18.0, 0.5));
+
+            GradeResult result = calculator.calculateFinalGrade(student);
+
+            assertEquals(17.0, result.getFinalGrade(), 0.001);
         }
     }
 
@@ -119,6 +131,20 @@ class GradeCalculatorTest {
 
             assertEquals(0.0, result.getFinalGrade(), 0.001);
             assertEquals(0.0, result.getExtraPointsApplied(), 0.001);
+        }
+
+        @Test
+        @DisplayName("shouldReturnCorrectDetailsWhenNoAttendance")
+        void shouldReturnCorrectDetailsWhenNoAttendance() {
+            Student student = new Student("STU021", false);
+            student.addEvaluation(new Evaluation("Parcial", 15.0, 1.0));
+
+            GradeResult result = calculator.calculateFinalGrade(student, 2025);
+
+            assertFalse(result.isMeetsAttendance());
+            assertTrue(result.isPenalizedByAttendance());
+            assertNotNull(result.getAttendanceDetail());
+            assertTrue(result.getAttendanceDetail().contains("No cumple"));
         }
     }
 
@@ -176,6 +202,111 @@ class GradeCalculatorTest {
 
             assertEquals(17.0, result.getFinalGrade(), 0.001);
         }
+
+        @Test
+        @DisplayName("shouldWorkWithNullAttendancePolicy")
+        void shouldWorkWithNullAttendancePolicy() {
+            GradeCalculator calcWithNullAttendance = new GradeCalculator(null, extraPointsPolicy);
+            Student student = new Student("STU022", true);
+            student.addEvaluation(new Evaluation("Parcial", 14.0, 1.0));
+
+            GradeResult result = calcWithNullAttendance.calculateFinalGrade(student, 2025);
+
+            assertEquals(16.0, result.getFinalGrade(), 0.001);
+        }
+
+        @Test
+        @DisplayName("shouldWorkWithExtraPointsPolicyOnlyConstructor")
+        void shouldWorkWithExtraPointsPolicyOnlyConstructor() {
+            GradeCalculator calcWithExtraOnly = new GradeCalculator(extraPointsPolicy);
+            Student student = new Student("STU023", true);
+            student.addEvaluation(new Evaluation("Final", 15.0, 1.0));
+
+            GradeResult result = calcWithExtraOnly.calculateFinalGrade(student, 2024);
+
+            assertEquals(17.0, result.getFinalGrade(), 0.001);
+        }
+
+        @Test
+        @DisplayName("shouldReturnCorrectExtraPointsDetail")
+        void shouldReturnCorrectExtraPointsDetail() {
+            Student student = new Student("STU024", true);
+            student.addEvaluation(new Evaluation("Final", 15.0, 1.0));
+
+            GradeResult result = calculator.calculateFinalGrade(student, 2025);
+
+            assertNotNull(result.getExtraPointsDetail());
+            assertTrue(result.getExtraPointsDetail().contains("2025") ||
+                    result.getExtraPointsDetail().contains("extra"));
+        }
+
+        @Test
+        @DisplayName("shouldReturnNoExtraPointsDetailWhenYearNotConfigured")
+        void shouldReturnNoExtraPointsDetailWhenYearNotConfigured() {
+            Student student = new Student("STU025", true);
+            student.addEvaluation(new Evaluation("Final", 15.0, 1.0));
+
+            GradeResult result = calculator.calculateFinalGrade(student, 2020);
+
+            assertNotNull(result.getExtraPointsDetail());
+        }
+    }
+
+    @Nested
+    @DisplayName("Constructores")
+    class ConstructorTests {
+
+        @Test
+        @DisplayName("shouldCreateCalculatorWithDefaultConstructor")
+        void shouldCreateCalculatorWithDefaultConstructor() {
+            GradeCalculator calc = new GradeCalculator();
+            Student student = new Student("STU026", true);
+            student.addEvaluation(new Evaluation("Final", 18.0, 1.0));
+
+            GradeResult result = calc.calculateFinalGrade(student);
+
+            assertEquals(18.0, result.getFinalGrade(), 0.001);
+        }
+
+        @Test
+        @DisplayName("shouldCreateCalculatorWithExtraPointsPolicyOnly")
+        void shouldCreateCalculatorWithExtraPointsPolicyOnly() {
+            ExtraPointsPolicy policy = new ExtraPointsPolicy(List.of(2025), 3.0);
+            GradeCalculator calc = new GradeCalculator(policy);
+            Student student = new Student("STU027", true);
+            student.addEvaluation(new Evaluation("Final", 15.0, 1.0));
+
+            GradeResult result = calc.calculateFinalGrade(student, 2025);
+
+            assertEquals(18.0, result.getFinalGrade(), 0.001);
+        }
+
+        @Test
+        @DisplayName("shouldCreateCalculatorWithBothPolicies")
+        void shouldCreateCalculatorWithBothPolicies() {
+            AttendancePolicy attendancePolicy = new AttendancePolicy();
+            ExtraPointsPolicy policy = new ExtraPointsPolicy(List.of(2025));
+            GradeCalculator calc = new GradeCalculator(attendancePolicy, policy);
+            Student student = new Student("STU028", true);
+            student.addEvaluation(new Evaluation("Final", 16.0, 1.0));
+
+            GradeResult result = calc.calculateFinalGrade(student, 2025);
+
+            assertEquals(18.0, result.getFinalGrade(), 0.001);
+        }
+
+        @Test
+        @DisplayName("shouldHandleNullExtraPointsPolicy")
+        void shouldHandleNullExtraPointsPolicy() {
+            GradeCalculator calc = new GradeCalculator(new AttendancePolicy(), null);
+            Student student = new Student("STU029", true);
+            student.addEvaluation(new Evaluation("Final", 17.0, 1.0));
+
+            GradeResult result = calc.calculateFinalGrade(student, 2025);
+
+            assertEquals(17.0, result.getFinalGrade(), 0.001);
+            assertNotNull(result.getExtraPointsDetail());
+        }
     }
 
     @Nested
@@ -185,8 +316,8 @@ class GradeCalculatorTest {
         @Test
         @DisplayName("shouldThrowExceptionWhenStudentIsNull")
         void shouldThrowExceptionWhenStudentIsNull() {
-            assertThrows(GradeCalculationException.class, 
-                () -> calculator.calculateFinalGrade(null, 2024));
+            assertThrows(GradeCalculationException.class,
+                    () -> calculator.calculateFinalGrade(null, 2024));
         }
 
         @Test
@@ -194,8 +325,8 @@ class GradeCalculatorTest {
         void shouldThrowExceptionWhenNoEvaluations() {
             Student student = new Student("STU011", true);
 
-            assertThrows(GradeCalculationException.class, 
-                () -> calculator.calculateFinalGrade(student, 2024));
+            assertThrows(GradeCalculationException.class,
+                    () -> calculator.calculateFinalGrade(student, 2024));
         }
 
         @Test
@@ -205,8 +336,8 @@ class GradeCalculatorTest {
             student.addEvaluation(new Evaluation("Parcial", 15.0, 0.3));
             student.addEvaluation(new Evaluation("Final", 15.0, 0.3));
 
-            assertThrows(GradeCalculationException.class, 
-                () -> calculator.calculateFinalGrade(student, 2024));
+            assertThrows(GradeCalculationException.class,
+                    () -> calculator.calculateFinalGrade(student, 2024));
         }
 
         @Test
@@ -270,6 +401,36 @@ class GradeCalculatorTest {
 
             assertEquals(15.0, result.getFinalGrade(), 0.001);
         }
+
+        @Test
+        @DisplayName("shouldThrowExceptionWithDescriptiveMessage")
+        void shouldThrowExceptionWithDescriptiveMessage() {
+            Student student = new Student("STU030", true);
+            student.addEvaluation(new Evaluation("Parcial", 15.0, 0.5));
+
+            GradeCalculationException exception = assertThrows(
+                    GradeCalculationException.class,
+                    () -> calculator.calculateFinalGrade(student, 2024)
+            );
+
+            assertTrue(exception.getMessage().contains("suma") ||
+                    exception.getMessage().contains("peso") ||
+                    exception.getMessage().contains("1.0"));
+        }
+
+        @Test
+        @DisplayName("shouldHandleWeightsExactlyOne")
+        void shouldHandleWeightsExactlyOne() {
+            Student student = new Student("STU031", true);
+            student.addEvaluation(new Evaluation("E1", 10.0, 0.25));
+            student.addEvaluation(new Evaluation("E2", 12.0, 0.25));
+            student.addEvaluation(new Evaluation("E3", 14.0, 0.25));
+            student.addEvaluation(new Evaluation("E4", 16.0, 0.25));
+
+            GradeResult result = calculator.calculateFinalGrade(student, 2023);
+
+            assertEquals(13.0, result.getFinalGrade(), 0.001);
+        }
     }
 
     @Nested
@@ -306,10 +467,39 @@ class GradeCalculatorTest {
             assertTrue(report.contains("Final"));
             assertTrue(report.contains("NOTA FINAL"));
         }
+
+        @Test
+        @DisplayName("shouldIncludeWeightedAverageInResult")
+        void shouldIncludeWeightedAverageInResult() {
+            Student student = new Student("STU032", true);
+            student.addEvaluation(new Evaluation("Parcial", 12.0, 0.4));
+            student.addEvaluation(new Evaluation("Final", 18.0, 0.6));
+
+            GradeResult result = calculator.calculateFinalGrade(student, 2023);
+
+            double expectedAverage = (12.0 * 0.4) + (18.0 * 0.6);
+            assertEquals(expectedAverage, result.getWeightedAverage(), 0.001);
+        }
+
+        @Test
+        @DisplayName("shouldIncludeCorrectEvaluationsInResult")
+        void shouldIncludeCorrectEvaluationsInResult() {
+            Student student = new Student("STU033", true);
+            student.addEvaluation(new Evaluation("PC1", 14.0, 0.3));
+            student.addEvaluation(new Evaluation("PC2", 16.0, 0.3));
+            student.addEvaluation(new Evaluation("Final", 18.0, 0.4));
+
+            GradeResult result = calculator.calculateFinalGrade(student, 2023);
+
+            assertEquals(3, result.getEvaluations().size());
+            assertEquals("PC1", result.getEvaluations().get(0).getName());
+            assertEquals("PC2", result.getEvaluations().get(1).getName());
+            assertEquals("Final", result.getEvaluations().get(2).getName());
+        }
     }
 
-    private Student createStudentWithEvaluations(String code, boolean hasAttendance, Evaluation... evaluations) {
-        Student student = new Student(code, hasAttendance);
+    private Student createStudentWithEvaluations(Evaluation... evaluations) {
+        Student student = new Student("STU003", true);
         for (Evaluation eval : evaluations) {
             student.addEvaluation(eval);
         }

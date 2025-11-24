@@ -4,9 +4,9 @@ CS-GradeCalculator,edu.utec.cs3081.policy,ExtraPointsPolicy,0,90,0,8,0,18,0,12,0
 CS-GradeCalculator,edu.utec.cs3081.exception,InvalidStudentDataException,0,4,0,0,0,2,0,1,0,1
 CS-GradeCalculator,edu.utec.cs3081.exception,InvalidEvaluationException,0,4,0,0,0,2,0,1,0,1
 CS-GradeCalculator,edu.utec.cs3081.exception,GradeCalculationException,0,4,0,0,0,2,0,1,0,1
-CS-GradeCalculator,edu.utec.cs3081,Main,229,0,6,0,60,0,11,0,8,0
+CS-GradeCalculator,edu.utec.cs3081,Main,208,21,6,0,56,4,9,2,6,2
 CS-GradeCalculator,edu.utec.cs3081.calculator,GradeResult.Builder,0,53,0,0,0,20,0,11,0,11
 CS-GradeCalculator,edu.utec.cs3081.calculator,GradeResult,16,211,0,2,1,39,1,12,1,11
-CS-GradeCalculator,edu.utec.cs3081.calculator,GradeCalculator,15,184,1,13,3,59,3,15,2,9
+CS-GradeCalculator,edu.utec.cs3081.calculator,GradeCalculator,0,199,0,14,0,62,0,18,0,11
 CS-GradeCalculator,edu.utec.cs3081.model,Evaluation,0,135,0,12,0,26,0,15,0,9
 CS-GradeCalculator,edu.utec.cs3081.model,Student,1,122,1,13,0,29,1,16,0,10

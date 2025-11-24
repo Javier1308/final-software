@@ -1,5 +1,6 @@
-/home/javier1308/Downloads/grade-calculator/src/test/java/edu/utec/cs3081/model/StudentTest.java
-/home/javier1308/Downloads/grade-calculator/src/test/java/edu/utec/cs3081/model/EvaluationTest.java
-/home/javier1308/Downloads/grade-calculator/src/test/java/edu/utec/cs3081/policy/ExtraPointsPolicyTest.java
-/home/javier1308/Downloads/grade-calculator/src/test/java/edu/utec/cs3081/policy/AttendancePolicyTest.java
-/home/javier1308/Downloads/grade-calculator/src/test/java/edu/utec/cs3081/calculator/GradeCalculatorTest.java
+/home/javier1308/dev/javier1308-github/final-software/src/test/java/edu/utec/cs3081/policy/AttendancePolicyTest.java
+/home/javier1308/dev/javier1308-github/final-software/src/test/java/edu/utec/cs3081/model/EvaluationTest.java
+/home/javier1308/dev/javier1308-github/final-software/src/test/java/edu/utec/cs3081/policy/ExtraPointsPolicyTest.java
+/home/javier1308/dev/javier1308-github/final-software/src/test/java/edu/utec/cs3081/MainTest.java
+/home/javier1308/dev/javier1308-github/final-software/src/test/java/edu/utec/cs3081/model/StudentTest.java
+/home/javier1308/dev/javier1308-github/final-software/src/test/java/edu/utec/cs3081/calculator/GradeCalculatorTest.java

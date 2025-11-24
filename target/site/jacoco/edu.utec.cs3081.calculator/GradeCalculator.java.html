@@ -28,7 +28,7 @@ public class GradeCalculator {
      * @param extraPointsPolicy política de puntos extra
      */
 <span class="fc" id="L30">    public GradeCalculator(AttendancePolicy attendancePolicy, ExtraPointsPolicy extraPointsPolicy) {</span>
-<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        this.attendancePolicy = attendancePolicy != null ? attendancePolicy : new AttendancePolicy();</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        this.attendancePolicy = attendancePolicy != null ? attendancePolicy : new AttendancePolicy();</span>
 <span class="fc" id="L32">        this.extraPointsPolicy = extraPointsPolicy;</span>
 <span class="fc" id="L33">    }</span>
 
@@ -38,8 +38,8 @@ public class GradeCalculator {
      * @param extraPointsPolicy política de puntos extra
      */
     public GradeCalculator(ExtraPointsPolicy extraPointsPolicy) {
-<span class="nc" id="L41">        this(new AttendancePolicy(), extraPointsPolicy);</span>
-<span class="nc" id="L42">    }</span>
+<span class="fc" id="L41">        this(new AttendancePolicy(), extraPointsPolicy);</span>
+<span class="fc" id="L42">    }</span>
 
     /**
      * Constructor por defecto sin puntos extra.
@@ -93,7 +93,7 @@ public class GradeCalculator {
      * @return GradeResult con la nota final y detalles
      */
     public GradeResult calculateFinalGrade(Student student) {
-<span class="nc" id="L96">        return calculateFinalGrade(student, 0);</span>
+<span class="fc" id="L96">        return calculateFinalGrade(student, 0);</span>
     }
 
     private void validateStudent(Student student) {

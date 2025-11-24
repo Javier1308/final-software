@@ -18,7 +18,7 @@ import java.util.Scanner;
  */
 <span class="nc" id="L19">public class Main {</span>
     
-<span class="nc" id="L21">    private static final Scanner scanner = new Scanner(System.in);</span>
+<span class="fc" id="L21">    private static final Scanner scanner = new Scanner(System.in);</span>
     
     public static void main(String[] args) {
 <span class="nc" id="L24">        printWelcome();</span>
@@ -119,9 +119,9 @@ import java.util.Scanner;
      * @return resultado del cálculo
      */
     public static GradeResult calculateGrade(Student student, int academicYear, List&lt;Integer&gt; yearsWithExtra) {
-<span class="nc" id="L122">        ExtraPointsPolicy extraPointsPolicy = new ExtraPointsPolicy(yearsWithExtra);</span>
-<span class="nc" id="L123">        GradeCalculator calculator = new GradeCalculator(extraPointsPolicy);</span>
-<span class="nc" id="L124">        return calculator.calculateFinalGrade(student, academicYear);</span>
+<span class="fc" id="L122">        ExtraPointsPolicy extraPointsPolicy = new ExtraPointsPolicy(yearsWithExtra);</span>
+<span class="fc" id="L123">        GradeCalculator calculator = new GradeCalculator(extraPointsPolicy);</span>
+<span class="fc" id="L124">        return calculator.calculateFinalGrade(student, academicYear);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
