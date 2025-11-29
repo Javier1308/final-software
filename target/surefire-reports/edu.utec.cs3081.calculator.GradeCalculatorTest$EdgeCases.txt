@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: edu.utec.cs3081.calculator.GradeCalculatorTest$EdgeCases
 -------------------------------------------------------------------------------
-Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in edu.utec.cs3081.calculator.GradeCalculatorTest$EdgeCases
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in edu.utec.cs3081.calculator.GradeCalculatorTest$EdgeCases

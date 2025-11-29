@@ -6,10 +6,10 @@ edu/utec/cs3081/calculator/GradeCalculatorTest$ConstructorTests.class
 edu/utec/cs3081/calculator/GradeCalculatorTest$EdgeCases.class
 edu/utec/cs3081/policy/ExtraPointsPolicyTest$ExtraPointsApplication.class
 edu/utec/cs3081/calculator/GradeCalculatorTest$CalculationDetails.class
-edu/utec/cs3081/policy/AttendancePolicyTest$AttendanceVerification.class
 edu/utec/cs3081/model/EvaluationTest$DataValidation.class
-edu/utec/cs3081/calculator/GradeCalculatorTest$NoMinimumAttendance.class
+edu/utec/cs3081/policy/AttendancePolicyTest$AttendanceVerification.class
 edu/utec/cs3081/model/EvaluationTest$TextRepresentation.class
+edu/utec/cs3081/calculator/GradeCalculatorTest$NoMinimumAttendance.class
 edu/utec/cs3081/policy/AttendancePolicyTest$PolicyApplication.class
 edu/utec/cs3081/model/EvaluationTest$ValidCreation.class
 edu/utec/cs3081/calculator/GradeCalculatorTest$NormalCalculation.class
@@ -18,10 +18,10 @@ edu/utec/cs3081/MainTest$CalculateGradeTests.class
 edu/utec/cs3081/model/StudentTest$DataValidation.class
 edu/utec/cs3081/model/StudentTest$ValidCreation.class
 edu/utec/cs3081/calculator/GradeCalculatorTest$ExtraPointsTests.class
-edu/utec/cs3081/policy/ExtraPointsPolicyTest$CustomConfiguration.class
 edu/utec/cs3081/model/StudentTest.class
+edu/utec/cs3081/policy/ExtraPointsPolicyTest$CustomConfiguration.class
 edu/utec/cs3081/calculator/GradeCalculatorTest.class
 edu/utec/cs3081/policy/AttendancePolicyTest.class
 edu/utec/cs3081/policy/AttendancePolicyTest$PolicyDescription.class
-edu/utec/cs3081/model/StudentTest$StudentInfo.class
 edu/utec/cs3081/model/StudentTest$EvaluationManagement.class
+edu/utec/cs3081/model/StudentTest$StudentInfo.class
